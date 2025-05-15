@@ -7,14 +7,6 @@
 #            logging:
 #              ConditionEvaluationReportLoggingListener: debug # 等同于使用 --debug启动程序
 
-management:
-  endpoint:
-    configprops:
-      enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: health,configprops,env
 server:
   port: 8881
 logging:

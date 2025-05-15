@@ -36,7 +36,7 @@ public class VertxReactiveWebServerFactory extends AbstractReactiveWebServerFact
                 .setWorkerPoolSize(20); // 设置 Worker 线程数为 20
         Vertx vertx = Vertx.vertx(options);
         Router router = Router.router(vertx);
-        router.get("/").handler(vertxHttpHandlerAdapter);
+        router.route("/*").handler(vertxHttpHandlerAdapter);
         HttpServer httpServer = vertx.createHttpServer();
         httpServer.requestHandler(router);
         return httpServer;
