@@ -34,7 +34,7 @@ public class VertxServerHttpResponse extends AbstractServerHttpResponse implemen
 
     @Override
     protected Mono<Void> writeWithInternal(Publisher<? extends DataBuffer> body) {
-        return Mono.just(response.send(toBuffer(body).block()).result());
+        return toBuffer(body).map(response::send).then();
     }
 
     private Mono<Buffer> toBuffer(Publisher<? extends DataBuffer> dataBuffers) {
@@ -44,8 +44,7 @@ public class VertxServerHttpResponse extends AbstractServerHttpResponse implemen
     private Buffer toByteBuf(DataBuffer buffer) {
         if (buffer instanceof NettyDataBuffer) {
             return Buffer.buffer(((NettyDataBuffer) buffer).getNativeBuffer());
-        }
-        else {
+        } else {
             return Buffer.buffer(Unpooled.wrappedBuffer(buffer.asByteBuffer()));
         }
     }
