@@ -1,21 +1,25 @@
 package io.itaiit.vertx;
 
 import io.vertx.core.http.HttpServer;
+import io.vertx.core.net.SocketAddress;
 import org.springframework.boot.web.server.*;
 
 public class VertxWebServer implements WebServer {
 
     private final HttpServer httpServer;
     private final Boolean gracefulShutdown;
+    private final SocketAddress listenAddress;
 
-    public VertxWebServer(HttpServer httpServer, Shutdown shutdown) {
+    public VertxWebServer(HttpServer httpServer, SocketAddress listenAddress, Shutdown shutdown) {
         this.httpServer = httpServer;
         this.gracefulShutdown = shutdown == Shutdown.GRACEFUL;
+        this.listenAddress = listenAddress;
     }
 
     @Override
     public void start() throws WebServerException {
-        httpServer.listen(8085);
+        httpServer.listen(listenAddress);
+        System.out.println("VertxWebServer started on " + listenAddress.host() + ":" + listenAddress.port());
     }
 
     @Override

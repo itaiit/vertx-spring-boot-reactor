@@ -27,7 +27,7 @@ public class VertxReactiveWebServerFactory extends AbstractReactiveWebServerFact
         // Create and return a new instance of your Vert.x web server
         VertxHttpHandlerAdapter vertxHttpHandlerAdapter = new VertxHttpHandlerAdapter(httpHandler);
         HttpServer httpServer = createHttpServer(vertxHttpHandlerAdapter);
-        VertxWebServer vertxWebServer = new VertxWebServer(httpServer, getShutdown());
+        VertxWebServer vertxWebServer = new VertxWebServer(httpServer, getListenAddress(), getShutdown());
         return vertxWebServer;
     }
 
@@ -37,7 +37,6 @@ public class VertxReactiveWebServerFactory extends AbstractReactiveWebServerFact
         Vertx vertx = Vertx.vertx(options);
         Router router = Router.router(vertx);
         router.get("/").handler(vertxHttpHandlerAdapter);
-
         HttpServer httpServer = vertx.createHttpServer();
         httpServer.requestHandler(router);
         return httpServer;

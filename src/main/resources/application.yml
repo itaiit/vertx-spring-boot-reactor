@@ -16,7 +16,7 @@ management:
       exposure:
         include: health,configprops,env
 server:
-  port: 8080
+  port: 8881
 logging:
   level:
     root: debug
