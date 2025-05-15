@@ -1,10 +1,13 @@
 package io.itaiit.vertx;
 
-import io.vertx.core.http.HttpHeaders;
+import io.netty.buffer.Unpooled;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerResponse;
 import org.reactivestreams.Publisher;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
+import org.springframework.core.io.buffer.NettyDataBuffer;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ZeroCopyHttpOutputMessage;
 import org.springframework.http.server.reactive.AbstractServerHttpResponse;
@@ -19,7 +22,7 @@ public class VertxServerHttpResponse extends AbstractServerHttpResponse implemen
     private final DataBufferFactory dataBufferFactory;
 
     public VertxServerHttpResponse(HttpServerResponse response, DataBufferFactory dataBufferFactory) {
-        super(dataBufferFactory);
+        super(dataBufferFactory, new HttpHeaders(new VertxHeadersAdapter(response.headers())));
         this.response = response;
         this.dataBufferFactory = dataBufferFactory;
     }
@@ -31,12 +34,25 @@ public class VertxServerHttpResponse extends AbstractServerHttpResponse implemen
 
     @Override
     protected Mono<Void> writeWithInternal(Publisher<? extends DataBuffer> body) {
-        return null;
+        return Mono.just(response.send(toBuffer(body).block()).result());
     }
 
+    private Mono<Buffer> toBuffer(Publisher<? extends DataBuffer> dataBuffers) {
+        return Mono.from(dataBuffers).map(this::toByteBuf);
+    }
+
+    private Buffer toByteBuf(DataBuffer buffer) {
+        if (buffer instanceof NettyDataBuffer) {
+            return Buffer.buffer(((NettyDataBuffer) buffer).getNativeBuffer());
+        }
+        else {
+            return Buffer.buffer(Unpooled.wrappedBuffer(buffer.asByteBuffer()));
+        }
+    }
 
     @Override
     protected Mono<Void> writeAndFlushWithInternal(Publisher<? extends Publisher<? extends DataBuffer>> body) {
+        System.out.println("VertxServerHttpResponse.writeAndFlushWithInternal");
         return null;
     }
 
@@ -49,8 +65,13 @@ public class VertxServerHttpResponse extends AbstractServerHttpResponse implemen
     }
 
     @Override
-    protected void applyHeaders() {
+    public Integer getRawStatusCode() {
+        Integer status = super.getRawStatusCode();
+        return (status != null ? status : this.response.getStatusCode());
+    }
 
+    @Override
+    protected void applyHeaders() {
     }
 
     @Override

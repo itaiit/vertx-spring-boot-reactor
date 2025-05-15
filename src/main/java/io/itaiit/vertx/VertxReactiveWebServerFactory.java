@@ -1,6 +1,7 @@
 package io.itaiit.vertx;
 
 import io.vertx.core.Vertx;
+import io.vertx.core.VertxOptions;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.net.SocketAddress;
 import io.vertx.ext.web.Router;
@@ -31,7 +32,9 @@ public class VertxReactiveWebServerFactory extends AbstractReactiveWebServerFact
     }
 
     private HttpServer createHttpServer(VertxHttpHandlerAdapter vertxHttpHandlerAdapter) {
-        Vertx vertx = Vertx.vertx();
+        VertxOptions options = new VertxOptions()
+                .setWorkerPoolSize(20); // 设置 Worker 线程数为 20
+        Vertx vertx = Vertx.vertx(options);
         Router router = Router.router(vertx);
         router.get("/").handler(vertxHttpHandlerAdapter);
 

@@ -26,6 +26,15 @@ public class VertxHttpHandlerAdapter implements Handler<RoutingContext> {
             throw new RuntimeException(e);
         }
         VertxServerHttpResponse vertxServerHttpResponse = new VertxServerHttpResponse(event.response(), dataBufferFactory);
-        this.httpHandler.handle(vertxHttpServerRequest, vertxServerHttpResponse);
+        this.httpHandler.handle(vertxHttpServerRequest, vertxServerHttpResponse)
+                .doOnError(e -> {
+                    event.fail(e);
+                })
+                .doOnSuccess(aVoid -> {
+                    if (!event.response().ended()) {
+                        event.response().end();
+                    }
+                })
+                .subscribe();
     }
 }

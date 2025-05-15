@@ -1,8 +1,6 @@
 package io.itaiit;
 
 
-import io.itaiit.service.MyService;
-import io.itaiit.service.MyTask;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.CommandLineRunner;
@@ -10,16 +8,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.annotation.MergedAnnotation;
-import org.springframework.core.annotation.MergedAnnotations;
-import org.springframework.core.env.MutablePropertySources;
-import org.springframework.core.env.PropertySource;
-import org.springframework.core.type.AnnotationMetadata;
-
-import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * @author itaiit

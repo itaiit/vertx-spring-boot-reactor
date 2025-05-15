@@ -1,16 +1,19 @@
 package io.itaiit.vertx;
 
 import io.netty.handler.codec.http.HttpHeaderNames;
+import io.vertx.core.MultiMap;
 import io.vertx.core.http.Cookie;
 import io.vertx.core.http.HttpServerRequest;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.HttpCookie;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.AbstractServerHttpRequest;
 import org.springframework.http.server.reactive.SslInfo;
 import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.MultiValueMapAdapter;
 import reactor.core.publisher.Flux;
 
 import java.net.URI;
@@ -23,7 +26,7 @@ public class VertxHttpServerRequest extends AbstractServerHttpRequest {
     private final DataBufferFactory bufferFactory;
 
     public VertxHttpServerRequest(HttpServerRequest request, DataBufferFactory bufferFactory) throws URISyntaxException {
-        super(initUri(request), "", (MultiValueMap<String, String>) request.headers());
+        super(initUri(request), "", new VertxHeadersAdapter(request.headers()));
         this.request = request;
         this.bufferFactory = bufferFactory;
     }

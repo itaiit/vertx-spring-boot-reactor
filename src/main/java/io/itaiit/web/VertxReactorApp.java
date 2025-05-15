@@ -8,6 +8,7 @@ public class VertxReactorApp {
 
     @GetMapping("/")
     public String hello() {
+        System.out.println("VertxReactorApp.hello");
         return "Hello, Vert.x Reactor!";
     }
 
