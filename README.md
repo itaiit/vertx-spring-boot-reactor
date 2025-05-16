@@ -5,6 +5,9 @@
 [Vertx](https://vertx.io/docs/)是一个异步的、事件驱动的应用程序框架，具有高性能和低延迟的特点，非常适合用于构建高并发的Web应用程序。
 # 目前的进展
 - [x] 能正常处理请求
+- [ ] 完善`io.itaiit.vertx.VertxServerHttpResponse.writeAndFlushWithInternal`的逻辑
+- [ ] 完善`io.itaiit.vertx.VertxHttpServerRequest.initSslInfo`的逻辑
+
 
 # 问题
 ## ~~服务启动循环打印~~
